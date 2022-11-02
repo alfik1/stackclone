@@ -1,0 +1,55 @@
+{%extends 'base.html'%}
+{%block body_block%}
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <div class="card mb-4">
+                {%if question.image%}
+                    <a href="#!"><img class="card-img-top" src="{{question.image.url}}" alt="..." /></a>
+
+                {%endif%}
+                <div class="card-body">
+                    <div class="small text-muted">{{question.created_date}}</div>
+                    <h2 class="card-title h4">{{question.description}}</h2>
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>
+                    <form action="{%url 'addanswer' question.id%}"method="post">
+                        {%csrf_token%}
+                        <textarea name="answer" id="" cols="30" rows="3">
+
+                        </textarea>
+                        <input type="submit" value="addyouranswer"class="btn btn-primary">
+                    </form>
+                    
+                </div>
+                <p>
+                  
+                  <button class="btn btn-primary form-control" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Answers
+                  </button>
+                </p>
+                <div class="collapse" id="collapseExample">
+                  <div class="card card-body">
+                    <ul class="list-group">
+                      {%for ans in question.fetch_answers%}
+                      <li class="list-group-item">
+                        <a href="{%url 'upvote' ans.id %}">upvote <span>{{ans.upvote.all.count}}</span></a>
+                        <h2 class="card-title h4">{{ans.answer}}</h2>
+                        <div class="small text-muted">replied on {{ans.created_date}} by {{ans.user}}</div>
+
+                        {%if ans.user == request.user%}
+                             <a href="{%url 'remove-answer' ans.id %}" class="btn btn-sm btn-outline-danger">remove</a>
+                        {%endif%}     
+                    
+                      </li>
+                      {%endfor%}
+                    </ul>
+                  </div>
+                </div>
+                </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+
+</div>
+{%endblock%}
